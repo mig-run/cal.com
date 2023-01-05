@@ -13,18 +13,18 @@ type Filter = {
 };
 
 const filters: Filter[] = [
-  {
-    name: "teams",
-    component: <TeamsMemberFilter />,
-    controllingQueryParams: ["teamId"],
-    showByDefault: true,
-  },
-  {
-    name: "people",
-    component: <PeopleFilter />,
-    controllingQueryParams: ["usersId"],
-    showByDefault: true,
-  },
+  // {
+  //   name: "teams",
+  //   component: <TeamsMemberFilter />,
+  //   controllingQueryParams: ["teamId"],
+  //   showByDefault: true,
+  // },
+  // {
+  //   name: "people",
+  //   component: <PeopleFilter />,
+  //   controllingQueryParams: ["usersId"],
+  //   showByDefault: true,
+  // },
 ];
 
 export function FiltersContainer() {

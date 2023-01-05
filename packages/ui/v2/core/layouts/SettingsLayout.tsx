@@ -28,7 +28,7 @@ const tabs: VerticalTabItemProps[] = [
       { name: "profile", href: "/settings/my-account/profile" },
       { name: "general", href: "/settings/my-account/general" },
       { name: "calendars", href: "/settings/my-account/calendars" },
-      { name: "conferencing", href: "/settings/my-account/conferencing" },
+      // { name: "conferencing", href: "/settings/my-account/conferencing" },
       { name: "appearance", href: "/settings/my-account/appearance" },
       // TODO
       // { name: "referrals", href: "/settings/my-account/referrals" },
@@ -41,33 +41,45 @@ const tabs: VerticalTabItemProps[] = [
     children: [
       { name: "password", href: "/settings/security/password" },
       { name: "2fa_auth", href: "/settings/security/two-factor-auth" },
-      { name: "impersonation", href: "/settings/security/impersonation" },
+      // { name: "impersonation", href: "/settings/security/impersonation" },
     ],
   },
-  {
-    name: "billing",
-    href: "/settings/billing",
-    icon: Icon.FiCreditCard,
-    children: [{ name: "manage_billing", href: "/settings/billing" }],
-  },
-  {
-    name: "developer",
-    href: "/settings/developer",
-    icon: Icon.FiTerminal,
-    children: [
-      //
-      { name: "webhooks", href: "/settings/developer/webhooks" },
-      { name: "api_keys", href: "/settings/developer/api-keys" },
-      // TODO: Add profile level for embeds
-      // { name: "embeds", href: "/v2/settings/developer/embeds" },
-    ],
-  },
-  {
-    name: "teams",
-    href: "/settings/teams",
-    icon: Icon.FiUsers,
-    children: [],
-  },
+  // {
+  //   name: "billing",
+  //   href: "/settings/billing",
+  //   icon: Icon.FiCreditCard,
+  //   children: [{ name: "manage_billing", href: "/settings/billing" }],
+  // },
+  // {
+  //   name: "developer",
+  //   href: "/settings/developer",
+  //   icon: Icon.FiTerminal,
+  //   children: [
+  //     //
+  //     { name: "webhooks", href: "/settings/developer/webhooks" },
+  //     { name: "api_keys", href: "/settings/developer/api-keys" },
+  //     // TODO: Add profile level for embeds
+  //     // { name: "embeds", href: "/v2/settings/developer/embeds" },
+  //   ],
+  // },
+  // {
+  //   name: "billing",
+  //   href: "/settings/billing",
+  //   icon: Icon.FiCreditCard,
+  //   children: [{ name: "manage_billing", href: "/settings/billing" }],
+  // },
+  // {
+  //   name: "developer",
+  //   href: "/settings/developer",
+  //   icon: Icon.FiTerminal,
+  //   children: [
+  //     //
+  //     { name: "webhooks", href: "/settings/developer/webhooks" },
+  //     { name: "api_keys", href: "/settings/developer/api-keys" },
+  //     // TODO: Add profile level for embeds
+  //     // { name: "embeds", href: "/v2/settings/developer/embeds" },
+  //   ],
+  // },
   {
     name: "admin",
     href: "/settings/admin",
@@ -83,9 +95,9 @@ const tabs: VerticalTabItemProps[] = [
 
 tabs.find((tab) => {
   // Add "SAML SSO" to the tab
-  if (tab.name === "security" && !HOSTED_CAL_FEATURES) {
-    tab.children?.push({ name: "saml_config", href: "/settings/security/sso" });
-  }
+  // if (tab.name === "security" && !HOSTED_CAL_FEATURES) {
+  //   tab.children?.push({ name: "saml_config", href: "/settings/security/sso" });
+  // }
 });
 
 // The following keys are assigned to admin only
@@ -303,27 +315,27 @@ const SettingsSidebarContainer = ({
                                   textClassNames="px-3 text-gray-900 font-medium text-sm"
                                   disableChevron
                                 />
-                                {HOSTED_CAL_FEATURES && (
-                                  <VerticalTabItem
-                                    name={t("saml_config")}
-                                    href={`/settings/teams/${team.id}/sso`}
-                                    textClassNames="px-3 text-gray-900 font-medium text-sm"
-                                    disableChevron
-                                  />
-                                )}
+                                {/*{HOSTED_CAL_FEATURES && (*/}
+                                {/*  <VerticalTabItem*/}
+                                {/*    name={t("saml_config")}*/}
+                                {/*    href={`/settings/teams/${team.id}/sso`}*/}
+                                {/*    textClassNames="px-3 text-gray-900 font-medium text-sm"*/}
+                                {/*    disableChevron*/}
+                                {/*  />*/}
+                                {/*)}*/}
                               </>
                             )}
                           </CollapsibleContent>
                         </Collapsible>
                       );
                   })}
-                <VerticalTabItem
-                  name={t("add_a_team")}
-                  href={`${WEBAPP_URL}/settings/teams/new`}
-                  textClassNames="px-3 text-gray-900 font-medium text-sm"
-                  icon={Icon.FiPlus}
-                  disableChevron
-                />
+                {/*<VerticalTabItem*/}
+                {/*  name={t("add_a_team")}*/}
+                {/*  href={`${WEBAPP_URL}/settings/teams/new`}*/}
+                {/*  textClassNames="px-3 text-gray-900 font-medium text-sm"*/}
+                {/*  icon={Icon.FiPlus}*/}
+                {/*  disableChevron*/}
+                {/*/>*/}
               </div>
             </React.Fragment>
           );

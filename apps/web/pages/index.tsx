@@ -12,7 +12,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return { redirect: { permanent: false, destination: "/auth/login" } };
   }
 
-  return { redirect: { permanent: false, destination: "/event-types" } };
+  return { redirect: { permanent: false, destination: "/bookings/upcoming" } };
 }
 
 export default RedirectPage;

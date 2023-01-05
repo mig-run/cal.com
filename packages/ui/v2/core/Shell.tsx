@@ -301,75 +301,75 @@ function UserDropdown({ small }: { small?: boolean }) {
             <HelpMenuItem onHelpItemSelect={() => onHelpItemSelect()} />
           ) : (
             <>
-              <DropdownMenuItem>
-                <button
-                  onClick={() => {
-                    mutation.mutate({ away: !user?.away });
-                    utils.viewer.me.invalidate();
-                  }}
-                  className="flex w-full min-w-max cursor-pointer items-center px-4 py-2 text-sm ltr:flex-row rtl:flex-row-reverse">
-                  <Icon.FiMoon
-                    className={classNames(
-                      user.away
-                        ? "text-purple-500 group-hover:text-purple-700"
-                        : "text-gray-500 group-hover:text-gray-700",
-                      "h-4 w-4 flex-shrink-0 ltr:mr-2 rtl:ml-2"
-                    )}
-                    aria-hidden="true"
-                  />
-                  {user.away ? t("set_as_free") : t("set_as_away")}
-                </button>
-              </DropdownMenuItem>
+              {/*<DropdownMenuItem>*/}
+              {/*  <button*/}
+              {/*    onClick={() => {*/}
+              {/*      mutation.mutate({ away: !user?.away });*/}
+              {/*      utils.viewer.me.invalidate();*/}
+              {/*    }}*/}
+              {/*    className="flex w-full min-w-max cursor-pointer items-center px-4 py-2 text-sm ltr:flex-row rtl:flex-row-reverse">*/}
+              {/*    <Icon.FiMoon*/}
+              {/*      className={classNames(*/}
+              {/*        user.away*/}
+              {/*          ? "text-purple-500 group-hover:text-purple-700"*/}
+              {/*          : "text-gray-500 group-hover:text-gray-700",*/}
+              {/*        "h-4 w-4 flex-shrink-0 ltr:mr-2 rtl:ml-2"*/}
+              {/*      )}*/}
+              {/*      aria-hidden="true"*/}
+              {/*    />*/}
+              {/*    {user.away ? t("set_as_free") : t("set_as_away")}*/}
+              {/*  </button>*/}
+              {/*</DropdownMenuItem>*/}
               <DropdownMenuSeparator className="h-px bg-gray-200" />
-              {user.username && (
-                <>
-                  <DropdownMenuItem>
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/${user.username}`}
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">
-                      <Icon.FiExternalLink className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}
-                      {t("view_public_page")}
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigator.clipboard.writeText(
-                          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/${user.username}`
-                        );
-                        showToast(t("link_copied"), "success");
-                      }}
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">
-                      <Icon.FiLink className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}
-                      {t("copy_public_page_link")}
-                    </a>
-                  </DropdownMenuItem>
-                </>
-              )}
-              <DropdownMenuSeparator className="h-px bg-gray-200" />
-              <DropdownMenuItem>
-                <a
-                  href={JOIN_SLACK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">
-                  <Icon.FiSlack strokeWidth={1.5} className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}
-                  {t("join_our_slack")}
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={ROADMAP}
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">
-                  <Icon.FiMap className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" /> {t("visit_roadmap")}
-                </a>
-              </DropdownMenuItem>
+              {/*{user.username && (*/}
+              {/*  <>*/}
+              {/*    <DropdownMenuItem>*/}
+              {/*      <a*/}
+              {/*        target="_blank"*/}
+              {/*        rel="noopener noreferrer"*/}
+              {/*        href={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/${user.username}`}*/}
+              {/*        className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">*/}
+              {/*        <Icon.FiExternalLink className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}*/}
+              {/*        {t("view_public_page")}*/}
+              {/*      </a>*/}
+              {/*    </DropdownMenuItem>*/}
+              {/*    <DropdownMenuItem>*/}
+              {/*      <a*/}
+              {/*        href="#"*/}
+              {/*        onClick={(e) => {*/}
+              {/*          e.preventDefault();*/}
+              {/*          navigator.clipboard.writeText(*/}
+              {/*            `${process.env.NEXT_PUBLIC_WEBSITE_URL}/${user.username}`*/}
+              {/*          );*/}
+              {/*          showToast(t("link_copied"), "success");*/}
+              {/*        }}*/}
+              {/*        className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">*/}
+              {/*        <Icon.FiLink className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}*/}
+              {/*        {t("copy_public_page_link")}*/}
+              {/*      </a>*/}
+              {/*    </DropdownMenuItem>*/}
+              {/*  </>*/}
+              {/*)}*/}
+              {/*<DropdownMenuSeparator className="h-px bg-gray-200" />*/}
+              {/*<DropdownMenuItem>*/}
+              {/*  <a*/}
+              {/*    href={JOIN_SLACK}*/}
+              {/*    target="_blank"*/}
+              {/*    rel="noreferrer"*/}
+              {/*    className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">*/}
+              {/*    <Icon.FiSlack strokeWidth={1.5} className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}*/}
+              {/*    {t("join_our_slack")}*/}
+              {/*  </a>*/}
+              {/*</DropdownMenuItem>*/}
+              {/*<DropdownMenuItem>*/}
+              {/*  <a*/}
+              {/*    target="_blank"*/}
+              {/*    rel="noopener noreferrer"*/}
+              {/*    href={ROADMAP}*/}
+              {/*    className="flex items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse">*/}
+              {/*    <Icon.FiMap className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" /> {t("visit_roadmap")}*/}
+              {/*  </a>*/}
+              {/*</DropdownMenuItem>*/}
               <DropdownMenuItem>
                 <button
                   onClick={() => setHelpOpen(true)}
@@ -385,16 +385,16 @@ function UserDropdown({ small }: { small?: boolean }) {
                   {t("help")}
                 </button>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={DESKTOP_APP_LINK}
-                  className="desktop-hidden hidden items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse lg:flex">
-                  <Icon.FiDownload className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}
-                  {t("download_desktop_app")}
-                </a>
-              </DropdownMenuItem>
+              {/*<DropdownMenuItem>*/}
+              {/*  <a*/}
+              {/*    target="_blank"*/}
+              {/*    rel="noopener noreferrer"*/}
+              {/*    href={DESKTOP_APP_LINK}*/}
+              {/*    className="desktop-hidden hidden items-center px-4 py-2 text-sm text-gray-700 ltr:flex-row rtl:flex-row-reverse lg:flex">*/}
+              {/*    <Icon.FiDownload className="h-4 w-4 text-gray-500 ltr:mr-2 rtl:ml-2" />{" "}*/}
+              {/*    {t("download_desktop_app")}*/}
+              {/*  </a>*/}
+              {/*</DropdownMenuItem>*/}
 
               <DropdownMenuSeparator className="h-px bg-gray-200" />
               <DropdownMenuItem>
@@ -443,11 +443,11 @@ const requiredCredentialNavigationItems = ["Routing Forms"];
 const MORE_SEPARATOR_NAME = "more";
 
 const navigation: NavigationItemType[] = [
-  {
-    name: "event_types_page_title",
-    href: "/event-types",
-    icon: Icon.FiLink,
-  },
+  // {
+  //   name: "event_types_page_title",
+  //   href: "/event-types",
+  //   icon: Icon.FiLink,
+  // },
   {
     name: "bookings",
     href: "/bookings/upcoming",
@@ -463,65 +463,65 @@ const navigation: NavigationItemType[] = [
     href: "/availability",
     icon: Icon.FiClock,
   },
-  {
-    name: "teams",
-    href: "/teams",
-    icon: Icon.FiUsers,
-    onlyDesktop: true,
-  },
-  {
-    name: "apps",
-    href: "/apps",
-    icon: Icon.FiGrid,
-    isCurrent: ({ router, item }) => {
-      const path = router.asPath.split("?")[0];
-      // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
-      return (
-        (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) && !path.includes("routing-forms/")
-      );
-    },
-    child: [
-      {
-        name: "app_store",
-        href: "/apps",
-        isCurrent: ({ router, item }) => {
-          const path = router.asPath.split("?")[0];
-          // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
-          return (
-            (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) &&
-            !path.includes("routing-forms/") &&
-            !path.includes("/installed")
-          );
-        },
-      },
-      {
-        name: "installed_apps",
-        href: "/apps/installed/calendar",
-        isCurrent: ({ router }) => {
-          const path = router.asPath;
-          return path.startsWith("/apps/installed/") || path.startsWith("/v2/apps/installed/");
-        },
-      },
-    ],
-  },
+  // {
+  //   name: "teams",
+  //   href: "/teams",
+  //   icon: Icon.FiUsers,
+  //   onlyDesktop: true,
+  // },
+  // {
+  //   name: "apps",
+  //   href: "/apps",
+  //   icon: Icon.FiGrid,
+  //   isCurrent: ({ router, item }) => {
+  //     const path = router.asPath.split("?")[0];
+  //     // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
+  //     return (
+  //       (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) && !path.includes("routing-forms/")
+  //     );
+  //   },
+  //   child: [
+  //     {
+  //       name: "app_store",
+  //       href: "/apps",
+  //       isCurrent: ({ router, item }) => {
+  //         const path = router.asPath.split("?")[0];
+  //         // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
+  //         return (
+  //           (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) &&
+  //           !path.includes("routing-forms/") &&
+  //           !path.includes("/installed")
+  //         );
+  //       },
+  //     },
+  //     {
+  //       name: "installed_apps",
+  //       href: "/apps/installed/calendar",
+  //       isCurrent: ({ router }) => {
+  //         const path = router.asPath;
+  //         return path.startsWith("/apps/installed/") || path.startsWith("/v2/apps/installed/");
+  //       },
+  //     },
+  //   ],
+  // },
   {
     name: MORE_SEPARATOR_NAME,
     href: "/more",
     icon: Icon.FiMoreHorizontal,
   },
-  {
-    name: "Routing Forms",
-    href: "/apps/routing-forms/forms",
-    icon: Icon.FiFileText,
-    isCurrent: ({ router }) => {
-      return router.asPath.startsWith("/apps/routing-forms/");
-    },
-  },
-  {
-    name: "workflows",
-    href: "/workflows",
-    icon: Icon.FiZap,
-  },
+  // {
+  //   name: "Routing Forms",
+  //   href: "/apps/routing-forms/forms",
+  //   icon: Icon.FiFileText,
+  //   isCurrent: ({ router }) => {
+  //     return router.asPath.startsWith("/apps/routing-forms/");
+  //   },
+  // },
+  // {
+  //   name: "workflows",
+  //   href: "/workflows",
+  //   icon: Icon.FiZap,
+  // },
   {
     name: "settings",
     href: "/settings/my-account/profile",
@@ -726,7 +726,7 @@ function SideBar() {
       <aside className="desktop-transparent top-0 hidden h-full max-h-screen w-14 flex-col overflow-y-auto border-r border-gray-100 bg-gray-50 md:sticky md:flex lg:w-56 lg:px-4">
         <div className="flex h-full flex-col justify-between py-3 lg:pt-5 ">
           <header className="items-center justify-between md:hidden lg:flex">
-            <Link href="/event-types">
+            <Link href="/bookings/upcoming">
               <a className="px-4">
                 <Logo small />
               </a>
@@ -744,14 +744,14 @@ function SideBar() {
                 className="desktop-only group flex text-sm font-medium text-neutral-500 hover:text-neutral-900">
                 <Icon.FiArrowRight className="h-4 w-4 flex-shrink-0 text-neutral-500 group-hover:text-neutral-900" />
               </button>
-              <KBarTrigger />
+              {/*<KBarTrigger />*/}
             </div>
           </header>
 
           <hr className="desktop-only absolute -left-3 -right-3 mt-4 block w-full border-gray-200" />
 
           {/* logo icon for tablet */}
-          <Link href="/event-types">
+          <Link href="/bookings/upcoming">
             <a className="text-center md:inline lg:hidden">
               <Logo small icon />
             </a>
