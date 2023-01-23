@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 
+import { ShellMain } from "@calcom/features/shell/Shell";
 import useApp from "@calcom/lib/hooks/useApp";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -27,7 +28,6 @@ import {
   Icon,
   Meta,
   SettingsToggle,
-  ShellMain,
   showToast,
   TextAreaField,
   TextField,
@@ -73,7 +73,7 @@ const Actions = ({
             routingForm={form}
             color="secondary"
             target="_blank"
-            size="icon"
+            variant="icon"
             type="button"
             rel="noreferrer"
             action="preview"
@@ -84,7 +84,7 @@ const Actions = ({
           routingForm={form}
           action="copyLink"
           color="secondary"
-          size="icon"
+          variant="icon"
           type="button"
           StartIcon={Icon.FiLink}
           tooltip={t("copy_link_to_form")}
@@ -96,7 +96,7 @@ const Actions = ({
             routingForm={form}
             action="download"
             color="secondary"
-            size="icon"
+            variant="icon"
             type="button"
             StartIcon={Icon.FiDownload}
           />
@@ -105,16 +105,16 @@ const Actions = ({
           routingForm={form}
           action="embed"
           color="secondary"
-          size="icon"
+          variant="icon"
           StartIcon={Icon.FiCode}
           tooltip={t("embed")}
         />
-        <DropdownMenuSeparator className="h-px bg-gray-200" />
+        <DropdownMenuSeparator />
         <FormAction
           routingForm={form}
           action="_delete"
           // className="mr-3"
-          size="icon"
+          variant="icon"
           StartIcon={Icon.FiTrash}
           color="secondary"
           type="button"
@@ -185,6 +185,7 @@ const Actions = ({
               {t("Copy Typeform Redirect Url")}
             </FormAction>
           ) : null}
+          <DropdownMenuSeparator />
           <FormAction
             action="_delete"
             routingForm={form}

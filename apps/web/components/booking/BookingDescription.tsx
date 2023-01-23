@@ -76,7 +76,7 @@ const BookingDescription: FC<Props> = (props) => {
         profile={profile}
         users={eventType.users}
         showMembers={eventType.schedulingType !== SchedulingType.ROUND_ROBIN}
-        size={10}
+        size="sm"
         truncateAfter={3}
       />
       <h2 className="mt-2 break-words text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -123,7 +123,8 @@ const BookingDescription: FC<Props> = (props) => {
         <div
           className={classNames(
             "flex flex-nowrap text-sm font-medium",
-            isBookingPage && "dark:text-darkgray-600 text-gray-600"
+            isBookingPage && "dark:text-darkgray-600 text-gray-600",
+            !eventType.metadata?.multipleDuration && "items-center"
           )}>
           <Icon.FiClock
             className={classNames(

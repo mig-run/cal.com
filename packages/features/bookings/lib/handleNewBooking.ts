@@ -14,7 +14,9 @@ import short from "short-uuid";
 import { v5 as uuidv5 } from "uuid";
 import z from "zod";
 
+import { metadata as GoogleMeetMetadata } from "@calcom/app-store/googlevideo/_metadata";
 import { getLocationValueForDB, LocationObject } from "@calcom/app-store/locations";
+import { MeetLocationType } from "@calcom/app-store/locations";
 import { handleEthSignature } from "@calcom/app-store/rainbow/utils/ethereum";
 import { handlePayment } from "@calcom/app-store/stripepayment/lib/server";
 import { getEventTypeAppData } from "@calcom/app-store/utils";
@@ -194,6 +196,12 @@ const getEventTypesFromDB = async (eventTypeId: number) => {
           timeZone: true,
         },
       },
+      hosts: {
+        select: {
+          isFixed: true,
+          user: userSelect,
+        },
+      },
       availability: {
         select: {
           date: true,
@@ -214,9 +222,11 @@ const getEventTypesFromDB = async (eventTypeId: number) => {
   };
 };
 
+type IsFixedAwareUser = User & { isFixed: boolean };
+
 async function ensureAvailableUsers(
   eventType: Awaited<ReturnType<typeof getEventTypesFromDB>> & {
-    users: User[];
+    users: IsFixedAwareUser[];
   },
   input: { dateFrom: string; dateTo: string },
   recurringDatesInfo?: {
@@ -224,7 +234,7 @@ async function ensureAvailableUsers(
     currentRecurringIndex: number | undefined;
   }
 ) {
-  const availableUsers: typeof eventType.users = [];
+  const availableUsers: IsFixedAwareUser[] = [];
   /** Let's start checking for availability */
   for (const user of eventType.users) {
     const { busy: bufferedBusyTimes, workingHours } = await getUserAvailability(
@@ -348,16 +358,25 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
     throw new HttpError({ statusCode: 400, message: error.message });
   }
 
-  let users = !eventTypeId
-    ? await prisma.user.findMany({
-        where: {
-          username: {
-            in: dynamicUserList,
+  const loadUsers = async () =>
+    !eventTypeId
+      ? await prisma.user.findMany({
+          where: {
+            username: {
+              in: dynamicUserList,
+            },
           },
-        },
-        ...userSelect,
-      })
-    : eventType.users;
+          ...userSelect,
+        })
+      : !!eventType.hosts?.length
+      ? eventType.hosts.map(({ user, isFixed }) => ({
+          ...user,
+          isFixed,
+        }))
+      : eventType.users;
+  // loadUsers allows type inferring
+  let users: (Awaited<ReturnType<typeof loadUsers>>[number] & { isFixed?: boolean })[] = await loadUsers();
+
   const isDynamicAllowed = !users.some((user) => !user.allowDynamicBooking);
   if (!isDynamicAllowed && !eventTypeId) {
     throw new HttpError({
@@ -381,6 +400,14 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
 
   if (!users) throw new HttpError({ statusCode: 404, message: "eventTypeUser.notFound" });
 
+  users = users.map((user) => ({
+    ...user,
+    isFixed:
+      user.isFixed === false
+        ? false
+        : user.isFixed || eventType.schedulingType !== SchedulingType.ROUND_ROBIN,
+  }));
+
   if (eventType && eventType.hasOwnProperty("bookingLimits") && eventType?.bookingLimits) {
     const startAsDate = dayjs(reqBody.start).toDate();
     await checkBookingLimits(eventType.bookingLimits, startAsDate, eventType.id);
@@ -390,7 +417,7 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
     const availableUsers = await ensureAvailableUsers(
       {
         ...eventType,
-        users,
+        users: users as IsFixedAwareUser[],
         ...(eventType.recurringEvent && {
           recurringEvent: {
             ...eventType.recurringEvent,
@@ -408,19 +435,31 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
       }
     );
 
-    // Add an if conditional if there are no seats on the event type
-    // Assign to only one user when ROUND_ROBIN
-    if (eventType.schedulingType === SchedulingType.ROUND_ROBIN) {
-      users = [await getLuckyUser("MAXIMIZE_AVAILABILITY", { availableUsers, eventTypeId: eventType.id })];
-    } else {
-      // excluding ROUND_ROBIN, all users have availability required.
-      if (availableUsers.length !== users.length) {
-        throw new Error("Some users are unavailable for booking.");
+    const luckyUsers: typeof users = [];
+    const luckyUserPool = availableUsers.filter((user) => !user.isFixed);
+    // loop through all non-fixed hosts and get the lucky users
+    while (luckyUserPool.length > 0 && luckyUsers.length < 1 /* TODO: Add variable */) {
+      const newLuckyUser = await getLuckyUser("MAXIMIZE_AVAILABILITY", {
+        // find a lucky user that is not already in the luckyUsers array
+        availableUsers: luckyUserPool.filter(
+          (user) => !luckyUsers.find((existing) => existing.id === user.id)
+        ),
+        eventTypeId: eventType.id,
+      });
+      if (!newLuckyUser) {
+        break; // prevent infinite loop
       }
-      users = availableUsers;
+      luckyUsers.push(newLuckyUser);
     }
+    // ALL fixed users must be available
+    if (
+      availableUsers.filter((user) => user.isFixed).length !== users.filter((user) => user.isFixed).length
+    ) {
+      throw new Error("Some users are unavailable for booking.");
+    }
+    users = [...luckyUsers, ...availableUsers.filter((user) => user.isFixed)];
   }
-  console.log("available users", users);
+
   const rainbowAppData = getEventTypeAppData(eventType, "rainbow") || {};
 
   // @TODO: use the returned address somewhere in booking creation?
@@ -449,11 +488,11 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
   const uid = translator.fromUUID(uuidv5(seed, uuidv5.URL));
 
   const bookingLocation = getLocationValueForDB(reqBody.location, eventType.locations);
-  console.log(bookingLocation, reqBody.location, eventType.locations);
+
   const customInputs = {} as NonNullable<CalendarEvent["customInputs"]>;
 
   const teamMemberPromises =
-    eventType.schedulingType === SchedulingType.COLLECTIVE
+    users.length > 1
       ? users.slice(1).map(async function (user) {
           return {
             email: user.email || "",
@@ -911,6 +950,38 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
       const metadata: AdditionalInformation = {};
 
       if (results.length) {
+        // Handle Google Meet results
+        // We use the original booking location since the evt location changes to daily
+        if (bookingLocation === MeetLocationType) {
+          const googleMeetResult = {
+            appName: GoogleMeetMetadata.name,
+            type: "conferencing",
+            uid: results[0].uid,
+            originalEvent: results[0].originalEvent,
+          };
+
+          const googleCalResult = results.find((result) => result.type === "google_calendar");
+
+          if (!googleCalResult) {
+            results.push({
+              ...googleMeetResult,
+              success: false,
+              calWarnings: [tOrganizer("google_meet_warning")],
+            });
+          }
+
+          if (googleCalResult?.createdEvent?.hangoutLink) {
+            results.push({
+              ...googleMeetResult,
+              success: true,
+            });
+          } else if (googleCalResult && !googleCalResult.createdEvent?.hangoutLink) {
+            results.push({
+              ...googleMeetResult,
+              success: false,
+            });
+          }
+        }
         // TODO: Handle created event metadata more elegantly
         metadata.hangoutLink = results[0].createdEvent?.hangoutLink;
         metadata.conferenceData = results[0].createdEvent?.conferenceData;

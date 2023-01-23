@@ -2,9 +2,10 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { GetServerSidePropsContext } from "next";
 
 import { NewScheduleButton, ScheduleListItem } from "@calcom/features/schedules";
+import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { RouterOutputs, trpc } from "@calcom/trpc/react";
-import { EmptyScreen, Icon, Shell, showToast } from "@calcom/ui";
+import { EmptyScreen, Icon, showToast } from "@calcom/ui";
 
 import { withQuery } from "@lib/QueryCell";
 import { HttpError } from "@lib/core/http/error";
@@ -83,7 +84,7 @@ export function AvailabilityList({ schedules }: RouterOutputs["viewer"]["availab
         </div>
       ) : (
         <div className="mb-16 overflow-hidden rounded-md border border-gray-200 bg-white">
-          <ul className="divide-y divide-neutral-200" data-testid="schedules" ref={animationParentRef}>
+          <ul className="divide-y divide-gray-200" data-testid="schedules" ref={animationParentRef}>
             {schedules.map((schedule) => (
               <ScheduleListItem
                 displayOptions={{

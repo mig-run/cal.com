@@ -8,6 +8,7 @@ import {
   CreateEventTypeButton,
   EventTypeDescriptionLazy as EventTypeDescription,
 } from "@calcom/features/eventtypes/components";
+import Shell from "@calcom/features/shell/Shell";
 import { APP_NAME, CAL_URL, WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { RouterOutputs, trpc, TRPCClientError } from "@calcom/trpc/react";
@@ -26,9 +27,10 @@ import {
   DropdownMenuTrigger,
   EmptyScreen,
   Icon,
-  Shell,
   showToast,
   Switch,
+  Avatar,
+  AvatarGroup,
   Tooltip,
 } from "@calcom/ui";
 
@@ -37,8 +39,6 @@ import { HttpError } from "@lib/core/http/error";
 
 import { EmbedButton, EmbedDialog } from "@components/Embed";
 import SkeletonLoader from "@components/eventtype/SkeletonLoader";
-import Avatar from "@components/ui/Avatar";
-import AvatarGroup from "@components/ui/AvatarGroup";
 
 import { ssrInit } from "@server/lib/ssr";
 
@@ -251,7 +251,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
   const lastItem = types[types.length - 1];
   return (
     <div className="mb-16 flex overflow-hidden rounded-md border border-gray-200 bg-white">
-      <ul ref={parent} className="!static w-full divide-y divide-neutral-200" data-testid="event-types">
+      <ul ref={parent} className="!static w-full divide-y divide-gray-200" data-testid="event-types">
         {types.map((type, index) => {
           const embedLink = `${group.profile.slug}/${type.slug}`;
           const calLink = `${CAL_URL}/${embedLink}`;
@@ -279,9 +279,8 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                     <div className="flex justify-between space-x-2 rtl:space-x-reverse">
                       {type.users?.length > 1 && (
                         <AvatarGroup
-                          border="border-2 border-white"
                           className="relative top-1 right-3"
-                          size={8}
+                          size="sm"
                           truncateAfter={4}
                           items={type.users.map((organizer) => ({
                             alt: organizer.name || "",
@@ -313,7 +312,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                             <Button
                               color="secondary"
                               target="_blank"
-                              size="icon"
+                              variant="icon"
                               href={calLink}
                               StartIcon={Icon.FiExternalLink}
                             />
@@ -322,7 +321,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                           <Tooltip content={t("copy_link")}>
                             <Button
                               color="secondary"
-                              size="icon"
+                              variant="icon"
                               StartIcon={Icon.FiLink}
                               onClick={() => {
                                 showToast(t("link_copied"), "success");
@@ -337,7 +336,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                               className="radix-state-open:rounded-r-md">
                               <Button
                                 type="button"
-                                size="icon"
+                                variant="icon"
                                 color="secondary"
                                 StartIcon={Icon.FiMoreHorizontal}
                               />
@@ -371,11 +370,12 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                                   {t("embed")}
                                 </EmbedButton>
                               </DropdownMenuItem>
-                              <DropdownMenuSeparator className="h-px bg-gray-200" />
+                              <DropdownMenuSeparator />
                               {/* readonly is only set when we are on a team - if we are on a user event type null will be the value. */}
                               {(group.metadata?.readOnly === false || group.metadata.readOnly === null) && (
                                 <DropdownMenuItem>
                                   <DropdownItem
+                                    color="destructive"
                                     onClick={() => {
                                       setDeleteDialogOpen(true);
                                       setDeleteDialogTypeId(type.id);
@@ -396,7 +396,12 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                 <div className="min-w-9 mx-5 flex sm:hidden">
                   <Dropdown>
                     <DropdownMenuTrigger asChild data-testid={"event-type-options-" + type.id}>
-                      <Button type="button" size="icon" color="secondary" StartIcon={Icon.FiMoreHorizontal} />
+                      <Button
+                        type="button"
+                        variant="icon"
+                        color="secondary"
+                        StartIcon={Icon.FiMoreHorizontal}
+                      />
                     </DropdownMenuTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuContent>
@@ -467,7 +472,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                             {t("duplicate")}
                           </Button>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="h-px bg-gray-200" />
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem className="outline-none">
                           <Button
                             onClick={() => {
@@ -512,12 +517,12 @@ const EventTypeListHeading = ({
   teamId,
 }: EventTypeListHeadingProps): JSX.Element => {
   return (
-    <div className="mb-4 flex">
+    <div className="mb-4 flex items-center space-x-2">
       <Link href={teamId ? `/settings/teams/${teamId}/profile` : "/settings/my-account/profile"}>
         <Avatar
           alt={profile?.name || ""}
           imageSrc={`${WEBAPP_URL}/${profile.slug}/avatar.png` || undefined}
-          size={8}
+          size="sm"
           className="mt-1 inline ltr:mr-2 rtl:ml-2"
         />
       </Link>
@@ -528,7 +533,7 @@ const EventTypeListHeading = ({
           {profile?.name || ""}
         </Link>
         {membershipCount && teamId && (
-          <span className="relative -top-px text-xs text-neutral-500 ltr:ml-2 ltr:mr-2 rtl:ml-2">
+          <span className="relative -top-px text-xs text-gray-500 ltr:ml-2 ltr:mr-2 rtl:ml-2">
             <Link href={`/settings/teams/${teamId}/members`}>
               <Badge variant="gray">
                 <Icon.FiUsers className="mr-1 -mt-px inline h-3 w-3" />
@@ -538,7 +543,7 @@ const EventTypeListHeading = ({
           </span>
         )}
         {profile?.slug && (
-          <Link href={`${CAL_URL}/${profile.slug}`} className="block text-xs text-neutral-500">
+          <Link href={`${CAL_URL}/${profile.slug}`} className="block text-xs text-gray-500">
             {`${CAL_URL?.replace("https://", "")}/${profile.slug}`}
           </Link>
         )}

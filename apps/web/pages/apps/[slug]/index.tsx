@@ -5,6 +5,7 @@ import { GetStaticPaths, GetStaticPropsContext } from "next";
 import path from "path";
 
 import { getAppWithMetadata } from "@calcom/app-store/_appRegistry";
+import ExisitingGoogleCal from "@calcom/app-store/googlevideo/components/ExistingGoogleCal";
 import prisma from "@calcom/prisma";
 
 import { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -34,9 +35,15 @@ function SingleAppPage({ data, source }: inferSSRProps<typeof getStaticProps>) {
       licenseRequired={data.licenseRequired}
       isProOnly={data.isProOnly}
       images={source.data?.items as string[] | undefined}
+      isTemplate={data.isTemplate}
       //   tos="https://zoom.us/terms"
       //   privacy="https://zoom.us/privacy"
-      body={<div dangerouslySetInnerHTML={{ __html: md.render(source.content) }} />}
+      body={
+        <>
+          {data.slug === "google-meet" && <ExisitingGoogleCal />}
+          <div dangerouslySetInnerHTML={{ __html: md.render(source.content) }} />
+        </>
+      }
     />
   );
 }
@@ -47,7 +54,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: "blocking",
   };
 };
 
@@ -55,7 +62,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
   if (typeof ctx.params?.slug !== "string") return { notFound: true };
 
   const app = await prisma.app.findUnique({
-    where: { slug: ctx.params.slug },
+    where: { slug: ctx.params.slug.toLowerCase() },
   });
 
   if (!app) return { notFound: true };
@@ -64,21 +71,31 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 
   if (!singleApp) return { notFound: true };
 
-  const appDirname = app.dirName;
+  const isTemplate = singleApp.isTemplate;
+  const appDirname = path.join(isTemplate ? "templates" : "", app.dirName);
   const README_PATH = path.join(process.cwd(), "..", "..", `packages/app-store/${appDirname}/DESCRIPTION.md`);
   const postFilePath = path.join(README_PATH);
   let source = "";
 
   try {
-    /* If the app doesn't have a README we fallback to the package description */
     source = fs.readFileSync(postFilePath).toString();
+    source = source.replace(/{DESCRIPTION}/g, singleApp.description);
   } catch (error) {
+    /* If the app doesn't have a README we fallback to the package description */
     console.log(`No DESCRIPTION.md provided for: ${appDirname}`);
     source = singleApp.description;
   }
 
   const { content, data } = matter(source);
-
+  if (data.items) {
+    data.items = data.items.map((item: string) => {
+      if (!item.includes("/api/app-store")) {
+        // Make relative paths absolute
+        return `/api/app-store/${appDirname}/${item}`;
+      }
+      return item;
+    });
+  }
   return {
     props: {
       source: { content, data },

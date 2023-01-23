@@ -504,7 +504,7 @@ const tabs = [
       return (
         <>
           <div>
-            <small className="flex py-4 text-neutral-500">
+            <small className="flex py-4 text-gray-500">
               {t("place_where_cal_widget_appear", { appName: APP_NAME })}
             </small>
           </div>
@@ -556,7 +556,7 @@ ${getEmbedTypeSpecificString({ embedFramework: "HTML", embedType, calLink, previ
       }
       return (
         <>
-          <small className="flex py-4 text-neutral-500">{t("create_update_react_component")}</small>
+          <small className="flex py-4 text-gray-500">{t("create_update_react_component")}</small>
           <TextArea
             data-testid="embed-react"
             ref={ref as typeof ref & MutableRefObject<HTMLTextAreaElement>}
@@ -597,7 +597,7 @@ ${getEmbedTypeSpecificString({ embedFramework: "react", embedType, calLink, prev
         <iframe
           ref={ref as typeof ref & MutableRefObject<HTMLIFrameElement>}
           data-testid="embed-preview"
-          className="border-1 h-[100vh] border"
+          className="h-[100vh] border"
           width="100%"
           height="100%"
           src={`${WEBAPP_URL}/embed/preview.html?embedType=${embedType}&calLink=${calLink}`}
@@ -639,7 +639,7 @@ const ChooseEmbedTypesDialogContent = () => {
       <div className="flex items-start">
         {embeds.map((embed, index) => (
           <button
-            className="w-1/3 border border-transparent p-3 text-left hover:rounded-md hover:border-gray-200 hover:bg-neutral-100 ltr:mr-2 rtl:ml-2"
+            className="w-1/3 border border-transparent p-3 text-left hover:rounded-md hover:border-gray-200 hover:bg-gray-100 ltr:mr-2 rtl:ml-2"
             key={index}
             data-testid={embed.type}
             onClick={() => {
@@ -650,7 +650,7 @@ const ChooseEmbedTypesDialogContent = () => {
             <div className="order-none box-border flex-none rounded-sm border border-solid bg-white">
               {embed.illustration}
             </div>
-            <div className="mt-2 font-medium text-neutral-900">{embed.title}</div>
+            <div className="mt-2 font-medium text-gray-900">{embed.title}</div>
             <p className="text-sm text-gray-500">{embed.subtitle}</p>
           </button>
         ))}
@@ -827,7 +827,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
                 onOpenChange={() => setIsEmbedCustomizationOpen((val) => !val)}>
                 <CollapsibleTrigger
                   type="button"
-                  className="flex w-full items-center text-base font-medium text-neutral-900">
+                  className="flex w-full items-center text-base font-medium text-gray-900">
                   <div>
                     {embedType === "inline"
                       ? "Inline Embed Customization"
@@ -838,7 +838,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
                   <Icon.FiChevronRight
                     className={`${
                       isEmbedCustomizationOpen ? "rotate-90 transform" : ""
-                    } ml-auto h-5 w-5 text-neutral-500`}
+                    } ml-auto h-5 w-5 text-gray-500`}
                   />
                 </CollapsibleTrigger>
                 <CollapsibleContent className="text-sm">
@@ -1001,11 +1001,11 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
                 open={isBookingCustomizationOpen}
                 onOpenChange={() => setIsBookingCustomizationOpen((val) => !val)}>
                 <CollapsibleTrigger className="flex w-full" type="button">
-                  <div className="text-base  font-medium text-neutral-900">Cal Booking Customization</div>
+                  <div className="text-base  font-medium text-gray-900">Cal Booking Customization</div>
                   <Icon.FiChevronRight
                     className={`${
                       isBookingCustomizationOpen ? "rotate-90 transform" : ""
-                    } ml-auto h-5 w-5 text-neutral-500`}
+                    } ml-auto h-5 w-5 text-gray-500`}
                   />
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -1163,7 +1163,7 @@ export const EmbedButton = <T extends React.ElementType>({
   ...props
 }: EmbedButtonProps<T> & React.ComponentPropsWithoutRef<T>) => {
   const router = useRouter();
-  className = classNames(className, "hidden lg:inline-flex");
+  className = classNames("hidden lg:inline-flex", className);
   const openEmbedModal = () => {
     goto(router, {
       dialog: "embed",

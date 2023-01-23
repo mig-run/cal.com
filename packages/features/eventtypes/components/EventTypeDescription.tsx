@@ -32,14 +32,14 @@ export const EventTypeDescription = ({ eventType, className }: EventTypeDescript
 
   return (
     <>
-      <div className={classNames("dark:text-darkgray-800 text-neutral-500", className)}>
+      <div className={classNames("dark:text-darkgray-800 text-gray-500", className)}>
         {eventType.description && (
           <p className="dark:text-darkgray-800 max-w-[280px] break-words py-1 text-sm text-gray-500 sm:max-w-[500px]">
             {eventType.description.substring(0, 300)}
             {eventType.description.length > 300 && "..."}
           </p>
         )}
-        <ul className="mt-2 flex flex-wrap space-x-2 rtl:space-x-reverse sm:flex-nowrap">
+        <ul className="mt-2 flex flex-wrap space-x-2 rtl:space-x-reverse">
           {eventType.metadata?.multipleDuration ? (
             eventType.metadata.multipleDuration.map((dur, idx) => (
               <li key={idx}>
@@ -55,17 +55,11 @@ export const EventTypeDescription = ({ eventType, className }: EventTypeDescript
               </Badge>
             </li>
           )}
-          {eventType.schedulingType ? (
+          {eventType.schedulingType && (
             <li>
-              <Badge variant="gray" size="lg" StartIcon={Icon.FiUser}>
+              <Badge variant="gray" size="lg" StartIcon={Icon.FiUsers}>
                 {eventType.schedulingType === SchedulingType.ROUND_ROBIN && t("round_robin")}
                 {eventType.schedulingType === SchedulingType.COLLECTIVE && t("collective")}
-              </Badge>
-            </li>
-          ) : (
-            <li>
-              <Badge variant="gray" size="lg" StartIcon={Icon.FiUser}>
-                {t("1_on_1")}
               </Badge>
             </li>
           )}

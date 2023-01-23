@@ -7,8 +7,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { AppFrontendPayload as App } from "@calcom/types/App";
 import type { CredentialFrontendPayload as Credential } from "@calcom/types/Credential";
 
-import { Button, Icon } from "../..";
-import { showToast } from "../../v2/core/notifications";
+import { Button, Icon, showToast } from "../..";
 
 interface AppCardProps {
   app: App;
@@ -40,7 +39,7 @@ export function AppCard({ app, credentials, searchText }: AppCardProps) {
   }, [app.name, searchText]);
 
   return (
-    <div className="relative flex h-64 flex-col rounded-md border border-gray-300 p-5">
+    <div className="relative flex h-64 flex-col rounded-md border border-gray-200 p-5">
       <div className="flex">
         <img src={app.logo} alt={app.name + " Logo"} className="mb-4 h-12 w-12 rounded-sm" />
       </div>
@@ -73,6 +72,7 @@ export function AppCard({ app, credentials, searchText }: AppCardProps) {
         }}>
         {app.description}
       </p>
+
       <div className="mt-5 flex max-w-full flex-row justify-between gap-2">
         <Button
           color="secondary"
@@ -143,6 +143,10 @@ export function AppCard({ app, credentials, searchText }: AppCardProps) {
             {t("installed", { count: appAdded })}
           </span>
         )}
+        {app.isTemplate && (
+          <span className="rounded-md bg-red-100 px-2 py-1 text-sm font-normal text-red-800">Template</span>
+        )}
+
         {app.isGlobal && (
           <span className="flex items-center rounded-md bg-gray-100 px-2 py-1 text-sm font-normal text-gray-800">
             {t("default")}
