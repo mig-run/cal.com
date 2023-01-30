@@ -268,7 +268,7 @@ export const eventTypesRouter = router({
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }
 
-    const mapEventType = (eventType: typeof user.eventTypes[number]) => ({
+    const mapEventType = (eventType: (typeof user.eventTypes)[number]) => ({
       ...eventType,
       users: !!eventType.hosts?.length ? eventType.hosts.map((host) => host.user) : eventType.users,
       // @FIXME: cc @hariombalhara This is failing with production data
@@ -297,8 +297,8 @@ export const eventTypesRouter = router({
     type EventTypeGroup = {
       teamId?: number | null;
       profile: {
-        slug: typeof user["username"];
-        name: typeof user["name"];
+        slug: (typeof user)["username"];
+        name: (typeof user)["name"];
       };
       metadata: {
         membershipCount: number;
@@ -404,7 +404,7 @@ export const eventTypesRouter = router({
   create: authedProcedure.input(createEventTypeInput).mutation(async ({ ctx, input }) => {
     const { schedulingType, teamId, ...rest } = input;
     const userId = ctx.user.id;
-
+    const appKeys = await getAppKeysFromSlug("daily-video");
     const data: Prisma.EventTypeCreateInput = {
       ...rest,
       owner: teamId ? undefined : { connect: { id: userId } },
@@ -413,13 +413,9 @@ export const eventTypesRouter = router({
           id: userId,
         },
       },
+      ...((typeof rest?.locations === "undefined" || rest.locations?.length === 0) &&
+        typeof appKeys.api_key === "string" && { locations: [{ type: DailyLocationType }] }),
     };
-
-    const appKeys = await getAppKeysFromSlug("daily-video");
-    // Shouldn't override input locations
-    if (rest.locations?.length === 0 && typeof appKeys.api_key === "string") {
-      data.locations = [{ type: DailyLocationType }];
-    }
 
     if (teamId && schedulingType) {
       const hasMembership = await ctx.prisma.membership.findFirst({
@@ -680,7 +676,13 @@ export const eventTypesRouter = router({
     }),
   duplicate: eventOwnerProcedure.input(EventTypeDuplicateInput.strict()).mutation(async ({ ctx, input }) => {
     try {
-      const { id: originalEventTypeId, title: newEventTitle, slug: newSlug } = input;
+      const {
+        id: originalEventTypeId,
+        title: newEventTitle,
+        slug: newSlug,
+        description: newDescription,
+        length: newLength,
+      } = input;
       const eventType = await ctx.prisma.eventType.findUnique({
         where: {
           id: originalEventTypeId,
@@ -739,6 +741,8 @@ export const eventTypesRouter = router({
         ...rest,
         title: newEventTitle,
         slug: newSlug,
+        description: newDescription,
+        length: newLength,
         locations: locations ?? undefined,
         teamId: team ? team.id : undefined,
         users: users ? { connect: users.map((user) => ({ id: user.id })) } : undefined,

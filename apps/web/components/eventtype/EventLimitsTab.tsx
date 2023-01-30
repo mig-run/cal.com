@@ -10,7 +10,8 @@ import findDurationType from "@calcom/lib/findDurationType";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { PeriodType } from "@calcom/prisma/client";
 import type { BookingLimit } from "@calcom/types/Calendar";
-import { Button, DateRangePicker, Icon, Input, InputField, Label, Select, SettingsToggle } from "@calcom/ui";
+import { Button, DateRangePicker, Input, InputField, Label, Select, SettingsToggle } from "@calcom/ui";
+import { FiPlus, FiTrash } from "@calcom/ui/components/icon";
 
 const MinimumBookingNoticeInput = React.forwardRef<
   HTMLInputElement,
@@ -419,19 +420,21 @@ const BookingLimits = () => {
                         defaultValue={BOOKING_LIMIT_OPTIONS.find((option) => option.value === key)}
                         onChange={(val) => {
                           const current = currentBookingLimits;
+                          const currentValue = watchBookingLimits[bookingLimitKey];
+
                           // Removes limit from previous selected value (eg when changed from per_week to per_month, we unset per_week here)
                           delete current[bookingLimitKey];
                           const newData = {
                             ...current,
                             // Set limit to new selected value (in the example above this means we set the limit to per_week here).
-                            [val?.value as BookingLimitsKey]: watchBookingLimits[bookingLimitKey],
+                            [val?.value as BookingLimitsKey]: currentValue,
                           };
                           onChange(newData);
                         }}
                       />
                       <Button
                         variant="icon"
-                        StartIcon={Icon.FiTrash}
+                        StartIcon={FiTrash}
                         color="destructive"
                         onClick={() => {
                           const current = currentBookingLimits;
@@ -445,7 +448,7 @@ const BookingLimits = () => {
             {currentBookingLimits && Object.keys(currentBookingLimits).length <= 3 && (
               <Button
                 color="minimal"
-                StartIcon={Icon.FiPlus}
+                StartIcon={FiPlus}
                 onClick={() => {
                   if (!currentBookingLimits || !watchBookingLimits) return;
                   const currentKeys = Object.keys(watchBookingLimits);
@@ -458,7 +461,7 @@ const BookingLimits = () => {
 
                   setValue("bookingLimits", {
                     ...watchBookingLimits,
-                    [rest[0].value]: undefined,
+                    [rest[0].value]: 1,
                   });
                 }}>
                 {t("add_limit")}

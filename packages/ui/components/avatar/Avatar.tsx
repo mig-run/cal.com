@@ -4,9 +4,10 @@ import Link from "next/link";
 
 import classNames from "@calcom/lib/classNames";
 import { defaultAvatarSrc } from "@calcom/lib/defaultAvatarImage";
-import { Icon } from "@calcom/ui";
 
 import { Maybe } from "@trpc/server";
+
+import { FiCheck } from "../icon";
 
 export type AvatarProps = {
   className?: string;
@@ -37,7 +38,8 @@ export function Avatar(props: AvatarProps) {
     <AvatarPrimitive.Root
       className={classNames(
         "dark:bg-darkgray-300 item-center relative inline-flex aspect-square justify-center overflow-hidden rounded-full",
-        props.className
+        props.className,
+        sizesPropsBySize[size]
       )}>
       <>
         <AvatarPrimitive.Image
@@ -60,7 +62,7 @@ export function Avatar(props: AvatarProps) {
               size === "lg" ? "h-5 w-5" : "h-2 w-2"
             )}>
             <div className="flex h-full items-center justify-center p-[2px]">
-              {size === "lg" && <Icon.FiCheck />}
+              {size === "lg" && <FiCheck />}
             </div>
           </div>
         )}
