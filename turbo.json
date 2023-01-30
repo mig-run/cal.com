@@ -262,6 +262,7 @@
     "$ALCHEMY_API_KEY",
     "$INFURA_API_KEY",
     "$GITHUB_API_REPO_TOKEN",
+    "$MIGRUN_INTEGRATION_KEY",
     "yarn.lock"
   ]
 }

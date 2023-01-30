@@ -456,3 +456,4 @@ const AvailabilityPage = ({ profile, eventType, ...restProps }: Props) => {
 };
 
 export default AvailabilityPage;
+export { SlotPicker };
