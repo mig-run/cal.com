@@ -676,7 +676,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
     return `${router.asPath.split("?")[0]}?${searchParams.toString()}`;
   };
   const parsedTabs = tabs.map((t) => ({ ...t, href: s(t.href) }));
-  const embedCodeRefs: Record<(typeof tabs)[0]["name"], RefObject<HTMLTextAreaElement>> = {};
+  const embedCodeRefs: Record<typeof tabs[0]["name"], RefObject<HTMLTextAreaElement>> = {};
   tabs
     .filter((tab) => tab.type === "code")
     .forEach((codeTab) => {
@@ -720,7 +720,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
 
   const calLink = decodeURIComponent(embedUrl);
 
-  const addToPalette = (update: (typeof previewState)["palette"]) => {
+  const addToPalette = (update: typeof previewState["palette"]) => {
     setPreviewState((previewState) => {
       return {
         ...previewState,
@@ -863,7 +863,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
                             };
                           });
                         }}
-                        addOnLeading={<InputLeading>W</InputLeading>}
+                        addOnLeading={<>W</>}
                       />
                       <span className="p-2">×</span>
                       <TextField
@@ -883,7 +883,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
                             };
                           });
                         }}
-                        addOnLeading={<InputLeading>H</InputLeading>}
+                        addOnLeading={<>H</>}
                       />
                     </div>
                   </div>
@@ -1061,7 +1061,7 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
                             defaultValue="#000000"
                             onChange={(color) => {
                               addToPalette({
-                                [palette.name as keyof (typeof previewState)["palette"]]: color,
+                                [palette.name as keyof typeof previewState["palette"]]: color,
                               });
                             }}
                           />

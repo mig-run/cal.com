@@ -22,7 +22,7 @@ export type IOnboardingPageProps = inferSSRProps<typeof getServerSideProps>;
 const INITIAL_STEP = "user-settings";
 const steps = ["user-settings", "connected-calendar", "setup-availability", "user-profile"] as const;
 
-const stepTransform = (step: (typeof steps)[number]) => {
+const stepTransform = (step: typeof steps[number]) => {
   const stepIndex = steps.indexOf(step);
   if (stepIndex > -1) {
     return steps[stepIndex];
@@ -59,7 +59,6 @@ const OnboardingPage = (props: IOnboardingPageProps) => {
         `${t("set_availability_getting_started_subtitle_1")}`,
         `${t("set_availability_getting_started_subtitle_2")}`,
       ],
-      skipText: `${t("set_my_availability_later")}`,
     },
     {
       title: `${t("nearly_there")}`,

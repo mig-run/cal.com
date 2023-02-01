@@ -268,7 +268,7 @@ export const eventTypesRouter = router({
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }
 
-    const mapEventType = (eventType: (typeof user.eventTypes)[number]) => ({
+    const mapEventType = (eventType: typeof user.eventTypes[number]) => ({
       ...eventType,
       users: !!eventType.hosts?.length ? eventType.hosts.map((host) => host.user) : eventType.users,
       // @FIXME: cc @hariombalhara This is failing with production data
@@ -297,8 +297,9 @@ export const eventTypesRouter = router({
     type EventTypeGroup = {
       teamId?: number | null;
       profile: {
-        slug: (typeof user)["username"];
-        name: (typeof user)["name"];
+        slug: typeof user["username"];
+        name: typeof user["name"];
+        image?: string;
       };
       metadata: {
         membershipCount: number;
