@@ -388,8 +388,13 @@ type Response = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> {
-  const { startTime, endTime, eventTypeId, key } = req.query;
-  if (typeof startTime !== "string" || typeof endTime !== "string" || typeof eventTypeId !== "string") {
+  const { startTime, endTime, eventTypeId, key, timezone } = req.query;
+  if (
+    typeof startTime !== "string" ||
+    typeof endTime !== "string" ||
+    typeof eventTypeId !== "string" ||
+    typeof timezone !== "string"
+  ) {
     return res.status(400).json({ message: "Missing parameters" });
   }
   if (key !== process.env.MIGRUN_INTEGRATION_KEY) {
@@ -401,6 +406,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       endTime: new Date(endTime).toISOString(),
       eventTypeId: parseInt(eventTypeId),
       eventTypeSlug: "any",
+      timeZone: timezone,
     },
     { prisma }
   )
