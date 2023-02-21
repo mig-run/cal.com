@@ -91,7 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     locationType: "integrations:daily",
     notes: notes as string,
   };
-  const data: BookingCreateBody = {
+  const data = {
     ...booking,
     start: start as string,
     end: end as string,
@@ -102,6 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     language: "en",
     hasHashedBookingLink: false,
     eventTypeSlug: eventType.slug,
+    noEmail: true,
     location: getEventLocationValue(locations, {
       type: booking.locationType,
       phone: booking.phone,
