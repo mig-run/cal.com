@@ -76,13 +76,28 @@ const createBooking = async (data: BookingCreateBody) => {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> {
-  const { eventTypeId, name, email, start, end, notes, timezone, key } = req.query;
+  const { eventTypeId, name, email, start, end, notes, timezone, key, id } = req.query;
   if (key !== process.env.MIGRUN_INTEGRATION_KEY) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   const eventType = await getEventType(eventTypeId as string, { prisma });
   if (!eventType) {
     return res.status(404).json({ message: "Event type not found" });
+  }
+  let rescheduleUid = undefined;
+  if (id) {
+    try {
+      const booking = await prisma.booking.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+      });
+      if (booking) {
+        rescheduleUid = booking.uid;
+      }
+    } catch (error) {
+      ///
+    }
   }
   const locations: LocationObject[] = [{ type: "integrations:daily" }];
   const booking: BookingFormValues = {
@@ -108,6 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       phone: booking.phone,
       attendeeAddress: booking.attendeeAddress,
     }),
+    rescheduleUid,
     guests: [],
   };
   return createBooking(data)
