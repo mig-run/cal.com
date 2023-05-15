@@ -9,6 +9,7 @@ import dayjs from "@calcom/dayjs";
 import { isPrismaObjOrUndefined } from "@calcom/lib";
 import { HttpError } from "@calcom/lib/http-error";
 import { getTranslation } from "@calcom/lib/server";
+import prisma from "@calcom/prisma";
 import { schemaBookingCancelParams } from "@calcom/prisma/zod-utils";
 import { CalendarEvent } from "@calcom/types/Calendar";
 
