@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import z from "zod";
 
 import {
   EventLocationType,
@@ -6,9 +7,14 @@ import {
   LocationObject,
   privacyFilteredLocations,
 } from "@calcom/app-store/locations";
+import handleNewBooking from "@calcom/features/bookings/lib/handleNewBooking";
 import { parseRecurringEvent } from "@calcom/lib";
 import prisma, { bookEventTypeSelect } from "@calcom/prisma";
-import { customInputSchema, EventTypeMetaDataSchema } from "@calcom/prisma/zod-utils";
+import {
+  bookingCreateBodySchema,
+  customInputSchema,
+  EventTypeMetaDataSchema,
+} from "@calcom/prisma/zod-utils";
 
 import { asStringOrThrow } from "@lib/asStringOrNull";
 import { post } from "@lib/core/http/fetch-wrapper";
@@ -126,12 +132,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     rescheduleUid,
     guests: [],
   };
-  console.log(data);
-  return createBooking(data)
+  req.body = data;
+  return handleNewBooking(req)
     .then((booking) => {
       return res.status(200).json({ message: booking });
     })
     .catch((error) => {
       return res.status(500).json(error);
     });
+
+  // return createBooking(data)
 }
