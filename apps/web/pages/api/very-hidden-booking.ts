@@ -126,6 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     rescheduleUid,
     guests: [],
   };
+  console.log(data);
   return createBooking(data)
     .then((booking) => {
       return res.status(200).json({ message: booking });
