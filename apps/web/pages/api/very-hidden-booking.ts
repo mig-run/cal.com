@@ -89,7 +89,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       const booking = await prisma.booking.findUnique({
         where: {
-          id: parseInt(id),
+          id: parseInt(id as string),
         },
       });
       if (booking) {

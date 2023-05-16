@@ -13,14 +13,14 @@ import prisma from "@calcom/prisma";
 import { schemaBookingCancelParams } from "@calcom/prisma/zod-utils";
 import { CalendarEvent } from "@calcom/types/Calendar";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "DELETE") {
     return cancelMigrunBooking(req, res);
   }
-  return res.status(404).json({ message: "Not found" });
+  return res.status(404);
 }
 
-async function cancelMigrunBooking(req: NextApiRequest, res: NextApiResponse<Response>) {
+async function cancelMigrunBooking(req: NextApiRequest, res: NextApiResponse) {
   if (req.query.key !== process.env.MIGRUN_INTEGRATION_KEY) {
     return res.status(401).json({ message: "Unauthorized" });
   }
